@@ -1,5 +1,5 @@
 (() => {
-  const base = () => (window.APP_CONFIG?.API_BASE_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
+  const base = () => (window.APP_CONFIG?.API_BASE_URL || "https://doctor-website-backend.fastapicloud.dev").replace(/\/$/, "");
   async function request(path, options = {}) {
     let response;
     try { response = await fetch(`${base()}${path}`, { ...options, headers: { ...(options.body === undefined ? {} : {"Content-Type":"application/json"}), ...(options.headers || {}) } }); }
