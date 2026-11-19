@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>درمان‌یار | نوبت‌دهی پزشکی</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="brand-icon">✚</span> درمان‌یار</a>
+  <nav><a class="active" href="#home">خانه</a><a href="#doctors">پزشکان</a><a href="#depression">ارزیابی سلامت روان</a><a href="admin.html">مدیریت</a></nav>
+  <a class="button button-outline" href="#doctors">رزرو نوبت</a>
+</header>
+<main id="home">
+<section class="hero">
+ <div class="hero-copy"><span class="eyebrow">مراقبت بهتر، زندگی سالم‌تر</span><h1>سلامتی شما،<br><span>اولویت ماست.</span></h1>
+ <p>پزشک موردنظرتان را پیدا کنید و در چند قدم ساده، نوبت خود را رزرو کنید.</p>
+ <a class="button button-primary" href="#doctors">مشاهده پزشکان ←</a><div class="hero-note"><span class="dot"></span> رزرو آسان و سریع نوبت پزشکی</div></div>
+ <div class="hero-art"><div class="art-circle"><div class="medical-cross">✚</div></div><div class="float-card float-one"><span class="float-icon">✓</span><div><b>رزرو آسان</b><small>در چند مرحله کوتاه</small></div></div><div class="float-card float-two"><span class="float-icon">♡</span><div><b>مراقبت هوشمند</b><small>همراه سلامت شما</small></div></div></div>
+</section>
+<section class="section" id="doctors">
+ <div class="section-heading"><div><span class="eyebrow">انتخاب آگاهانه</span><h2>پزشکان ما</h2><p>زمان‌های خالی را مشاهده و نوبت موردنظر را رزرو کنید.</p></div><button class="button button-outline" id="refreshDoctors">↻ بروزرسانی</button></div>
+ <div id="doctorList" class="doctor-grid"><div class="loading">در حال دریافت پزشکان...</div></div>
+</section>
+<section class="section" id="depression">
+ <div class="section-heading"><div><span class="eyebrow">خودارزیابی</span><h2>ارزیابی کوتاه سلامت روان</h2><p>پاسخ‌ها را بر اساس وضعیت دو هفته اخیر خود انتخاب کنید.</p></div></div>
+ <form id="depressionForm" class="panel-card">
+  <div class="form-grid">
+   <label>سن<input type="number" name="age" min="1" required placeholder="سن شما"></label>
+   <label>جنسیت<select name="gender"><option value="">انتخاب نشده</option><option value="Female">زن</option><option value="Male">مرد</option></select></label>
+   <label>کیفیت خواب (۰ تا ۳)<select name="sleep_quality" required><option value="0">۰</option><option value="1">۱</option><option value="2">۲</option><option value="3">۳</option></select></label>
+   <label>فشار تحصیلی (۰ تا ۳)<select name="study_pressure" required><option value="0">۰</option><option value="1">۱</option><option value="2">۲</option><option value="3">۳</option></select></label>
+   <label>فشار مالی (۰ تا ۳)<select name="financial_pressure" required><option value="0">۰</option><option value="1">۱</option><option value="2">۲</option><option value="3">۳</option></select></label>
+  </div>
+  <div class="question-list" id="phqQuestions"></div>
+  <button class="button button-primary" type="submit" id="predictBtn">مشاهده نتیجه</button>
+  <div id="predictionResult" class="result-box" aria-live="polite"></div>
+  <p class="disclaimer">این ابزار صرفاً خودارزیابی و آموزشی است و تشخیص پزشکی یا جایگزین مشاوره متخصص نیست. اگر در حال حاضر در معرض خطر آسیب به خود هستید، فوراً از یک فرد مورد اعتماد و خدمات اورژانسی محل زندگی‌تان کمک بگیرید.</p>
+ </form>
+</section>
+<section class="cta">
+ <div><span class="eyebrow">دستیار هوشمند</span><h2>برای پیدا کردن پزشک مناسب سوال بپرسید.</h2><p>دستیار بر اساس اطلاعات پزشکان ثبت‌شده راهنمایی‌تان می‌کند.</p></div>
+ <div class="chat-box"><textarea id="aiQuestion" rows="3" placeholder="مثلاً برای سردرد به چه پزشکی مراجعه کنم؟"></textarea><button id="askAi" class="button button-primary">ارسال سوال</button><div id="aiAnswer" class="ai-answer"></div></div>
+</section>
+</main>
+<footer>© درمان‌یار — سامانه نوبت‌دهی پزشکی</footer><div id="toast" class="toast"></div>
+<script src="config.js"></script><script src="app.js"></script>
+</body></html>
