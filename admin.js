@@ -1,4 +1,4 @@
-const API=window.API_BASE_URL||"http://127.0.0.1:8000";
+const API=window.API_BASE_URL||" https://doctor-website-backend.fastapicloud.dev";
 const $=id=>document.getElementById(id);
 function toast(msg){const el=$("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),3000)}
 function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
