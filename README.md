@@ -1,79 +1,44 @@
-# درمان‌یار — فرانت‌اند نوبت‌دهی پزشک
+# هم‌قدم | فرانت‌اند سایت روان‌شناسی
 
-فرانت‌اند فارسی و راست‌چین با HTML/CSS/JavaScript خام؛ بدون React، npm یا build step.
-
-## ساختار پروژه
-
-```text
-doctor-website/
-├── index.html
-├── pages/
-│   └── admin.html
-├── assets/
-│   ├── css/
-│   │   └── styles.css
-│   └── js/
-│       ├── config.js
-│       ├── api.js
-│       ├── ui.js
-│       ├── booking.js
-│       ├── depression.js
-│       ├── main.js
-│       └── admin.js
-├── README.md
-└── .gitignore
-```
+فرانت‌اند ساده و واکنش‌گرای فارسی با HTML، CSS و JavaScript خام.
 
 ## اجرا
+1. بک‌اند FastAPI را اجرا کن (پیش‌فرض: `http://127.0.0.1:8000`).
+2. مقدار `API_BASE_URL` را در `config.js` در صورت نیاز تغییر بده.
+3. فایل `index.html` را با Live Server در VS Code اجرا کن. بهتر است فایل را مستقیم با `file://` باز نکنی.
+4. در FastAPI، CORS را برای origin فرانت‌اند فعال کن.
 
-1. بک‌اند FastAPI را اجرا کنید؛ آدرس پیش‌فرض `http://127.0.0.1:8000` است.
-2. در صورت نیاز آدرس را در `assets/js/config.js` تغییر دهید.
-3. پوشه را با VS Code باز کنید و `index.html` را با Live Server اجرا کنید. می‌توانید مستقیماً هم فایل را باز کنید، اما Live Server معمولاً تجربه بهتری دارد.
-4. برای مدیریت به `pages/admin.html` بروید.
-5. CORS در FastAPI باید origin فرانت‌اند را مجاز کند.
+نمونه CORS در بک‌اند:
+```python
+from fastapi.middleware.cors import CORSMiddleware
 
-## امکانات صفحه اصلی
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5500", "http://localhost:5500"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
 
-- دریافت فهرست پزشکان از `GET /doctors`
-- نمایش اطلاعات، ساعت‌های آزاد و رزروشده
-- رزرو با `POST /doctors/{doctor_id}/reserve` و بدنه `{ "name": "...", "start": "..." }`
-- درخواست لغو با `POST /doctors/{doctor_id}/cancel` و بدنه `{ "name": "...", "start": "..." }` (مطابق OpenAPI ذخیره‌شده)
-- خودارزیابی و ارسال داده‌ها به `POST /predict-depress`
-- ارسال پرسش متنی به `POST /ask-ai`
-
-## امکانات پنل مدیریت
-
-- افزودن پزشک با مشخصات و ساخت ساعت‌های کاری از طریق time picker
-- مشاهده تعداد پزشکان، وضعیت اتصال و تعداد زمان‌های آزاد/رزروشده
-- ویرایش نام، شماره تماس، توضیحات، آدرس و ساعت‌های کاری هر پزشک
-- حذف پزشک با تأیید کاربر
-- هنگام ویرایش، بازه‌های رزروشده قفل هستند تا رزروهای موجود تصادفاً حذف یا تغییر نکنند
-
-## قرارداد API و مواردی که باید با بک‌اند تطبیق داده شوند
-
-این فرانت‌اند بر اساس OpenAPI و نمونه‌های API ارسال‌شده در گفتگو ساخته شده است. در OpenAPI ذخیره‌شده، مسیرهای زیر وجود داشتند:
-
-- `POST /create-doctor`
+## endpointهای مورد استفاده
 - `GET /doctors`
-- `GET /doctors/{id}`
+- `POST /create-doctor` با `name`, `description`, `phone_number`, `address`
 - `DELETE /doctors/{id}/delete`
-- `POST /doctors/{doctor_id}/reserve`
-- `POST /doctors/{doctor_id}/cancel`
+- `POST /doctors/{doctor_id}/reserve` با `name`, `start`
+- `POST /doctors/{doctor_id}/cancel` در این نسخه در UI عمومی نمایش داده نشده است.
 - `POST /predict-depress`
 - `POST /ask-ai`
 
-اما در همان OpenAPI مسیر ویرایش پزشک دیده نمی‌شد. برای فعال‌شدن فرم ویرایش، بک‌اند باید این endpoint را فراهم کند:
+## نکات مهم اتصال
+- فهرست زمان‌های پزشک از فیلد `schedule` در پاسخ `GET /doctors` خوانده می‌شود. هر آیتم زمان باید `start`, `is_reserved` و در صورت وجود `reserved_by` داشته باشد.
+- فرم تست افسردگی مقادیر `question_1` تا `question_9` را به صورت عددی ۰ تا ۳ ارسال می‌کند.
+- فیلد جنسیت در فرم به صورت `gender: "Female" | "Male"` ارسال می‌شود. در بک‌اند باید مدل ورودی این فیلد را بپذیرد و آن را به `Gender_Female` و `Gender_Male` تبدیل کند. اگر مدل Pydantic شما به‌جای `gender` دو فیلد بولی `gender_female` و `gender_male` می‌خواهد، بخش ساخت `payload` در `app.js` را مطابق آن تغییر بده.
+- `sleep_quality`، `study_pressure` و `financial_pressure` به شکل عددی ارسال می‌شوند. گزینه‌های فعلی رابط ۱ تا ۵ برای کیفیت خواب و ۰ تا ۴ برای فشارها هستند؛ این مقیاس‌ها باید با مقیاس واقعی دیتاست و مدل شما یکسان باشند.
+- برای `/ask-ai` در نسخه فعلی متن خام با `Content-Type: text/plain` ارسال می‌شود، چون پیاده‌سازی قبلی endpoint متن را با `Body()` می‌گرفت. اگر endpoint شما JSON می‌خواهد، باید body و Content-Type در `app.js` تغییر کند.
 
-`PATCH /doctors/{id}/update`
+## پنل مدیریت و امنیت
+این نسخه پنل مدیریت را از نظر رابط کاربری جدا کرده است، اما ورود امن یا احراز هویت ادمین در آن وجود ندارد؛ هر کاربری که صفحه را باز کند می‌تواند وارد نمای پنل شود. عملیات واقعی مدیریت باید در بک‌اند با احراز هویت، مجوز دسترسی و اعتبارسنجی سمت سرور محافظت شوند. هرگز کلید یا رمز ادمین را فقط در JavaScript قرار نده.
 
-با JSON شامل فیلدهای `name`, `description`, `phone_number`, `address`, `schedule`. مقدار `schedule` آرایه‌ای از slotهاست؛ هر slot حداقل `start`, `end`, `is_reserved` و در صورت وجود `reserved_by` دارد. اگر نام فیلدهای مدل بک‌اند شما متفاوت است، payload در `assets/js/admin.js` را با مدل واقعی هماهنگ کنید.
-
-همچنین در OpenAPI ذخیره‌شده، schema مربوط به `DoctorCreate` فیلد `schedule` را نشان نمی‌داد؛ با این حال فرم افزودن، schedule را در payload می‌فرستد. مدل ورودی endpoint افزودن پزشک باید `schedule` را بپذیرد تا ساعت‌ها ذخیره شوند.
-
-## امنیت مهم
-
-این پنل فقط رابط کاربری است و احراز هویت ندارد. قبل از انتشار عمومی، endpointهای افزودن، ویرایش و حذف را در بک‌اند با ورود مدیر، هش رمز عبور، session/JWT و بررسی نقش محافظت کنید. مخفی کردن لینک پنل در فرانت‌اند امنیت ایجاد نمی‌کند.
-
-## نکته سلامت
-
-خروجی بخش خودارزیابی صرفاً پیش‌بینی مدل است، نه تشخیص پزشکی. در صورت پاسخ مثبت به پرسش نهم، پیام راهنمای دریافت کمک نمایش داده می‌شود.
+## محدودیت فعلی API
+در اسکیمای قبلی مسیر ساخت/حذف پزشک و رزرو وجود داشت، اما مسیر افزودن یا ویرایش زمان‌بندی پزشک مشخص نبود. بنابراین UI زمان‌های موجود در پاسخ API را نمایش می‌دهد و زمان جدید ایجاد نمی‌کند.

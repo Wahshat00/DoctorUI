@@ -1,2 +1,4 @@
-// آدرس سرور FastAPI را در صورت نیاز تغییر بده.
-window.API_BASE_URL = " https://doctor-website-backend.fastapicloud.dev";
+// آدرس پایه بک‌اند را در صورت نیاز فقط از اینجا تغییر بده.
+window.APP_CONFIG = {
+  API_BASE_URL: "https://doctor-website-backend.fastapicloud.dev"
+};
